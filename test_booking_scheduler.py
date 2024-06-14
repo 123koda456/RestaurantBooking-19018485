@@ -1,7 +1,6 @@
 import unittest
 from unittest.mock import Mock, patch
 from datetime import datetime, timedelta
-from communication_test import TestableSmsSender, TestableMailSender
 from schedule import Customer, Schedule
 from booking_scheduler import BookingScheduler
 

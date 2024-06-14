@@ -2,7 +2,7 @@ import unittest
 from datetime import datetime
 from datetime import timedelta
 
-from communication_test import TestableSmsSender
+from communication_test import TestableSmsSender, TestableMailSender
 from schedule import Customer, Schedule
 from booking_scheduler import BookingScheduler
 
@@ -39,7 +39,7 @@ class BookingSchedulerTest(unittest.TestCase):
             new_schedule = Schedule(ON_THE_HOUR, UNDER_CAPACITY, CUSTOMER)
             self.booking_scheduler.add_schedule(new_schedule)
 
-        self.assertEquals("Number of people is over restaurant capacity per hour", str(context.exception))
+        self.assertEqual("Number of people is over restaurant capacity per hour", str(context.exception))
 
     def test_시간대별_인원제한이_있다_같은_시간대가_다르면_Capacity_차있어도_스케쥴_추가_성공(self):
         schedule = Schedule(ON_THE_HOUR, CAPACITY_PER_HOUR, CUSTOMER)
@@ -59,6 +59,12 @@ class BookingSchedulerTest(unittest.TestCase):
         self.assertTrue(self.testable_sms_sender.is_send_method_is_called())
 
     def test_이메일이_없는_경우에는_이메일_미발송(self):
+        testable_mail_sender = TestableMailSender()
+        schedule = Schedule(ON_THE_HOUR, CAPACITY_PER_HOUR, CUSTOMER)
+        self.booking_scheduler.set_mail_sender(testable_mail_sender)
+
+        self.booking_scheduler.add_schedule(schedule)
+        self.assertEqual(testable_mail_sender.get_count_send_mail_is_called(), 0)
         pass
 
     def test_이메일이_있는_경우에는_이메일_발송(self):

@@ -9,6 +9,7 @@ from booking_scheduler import BookingScheduler
 NOT_ON_THE_HOUR = datetime.strptime("2024/06/14 09:05", "%Y/%m/%d %H:%M")
 ON_THE_HOUR = datetime.strptime("2024/06/14 09:00", "%Y/%m/%d %H:%M")
 CUSTOMER = Customer("Fake name", "010-1234-5678")
+CUSTOMER_WITH_MAIL = Customer("Fake Name", "010-1234-5678", "test@test.com")
 UNDER_CAPACITY = 1
 CAPACITY_PER_HOUR = 3
 
@@ -69,8 +70,7 @@ class BookingSchedulerTest(unittest.TestCase):
         pass
 
     def test_이메일이_있는_경우에는_이메일_발송(self):
-        customer_with_mail = Customer("Fake Name", "010-1234-5678", "test@test.com")
-        schedule = Schedule(ON_THE_HOUR, CAPACITY_PER_HOUR, customer_with_mail)
+        schedule = Schedule(ON_THE_HOUR, CAPACITY_PER_HOUR, CUSTOMER_WITH_MAIL)
 
         self.booking_scheduler.add_schedule(schedule)
         self.assertEqual(self.testable_mail_sender.get_count_send_mail_is_called(), 1)
